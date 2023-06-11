@@ -64,11 +64,12 @@ module "ec2_instances" {
 module "website_s3_bucket" {
   source = "./modules/aws-s3-static-website-bucket"
 
-  bucket_name = "franz-example-2023-06-11"
+  bucket_preffix = "module-object-attributes-"
 
   tags = {
-    Terraform   = "true"
-    Environment = "dev"
+    terraform     = "true"
+    environment   = "dev"
+    public-bucket = true
   }
 }
 

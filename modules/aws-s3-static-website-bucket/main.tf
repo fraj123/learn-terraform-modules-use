@@ -1,5 +1,6 @@
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = var.bucket_name
+  bucket        = var.bucket_name
+  bucket_prefix = var.bucket_preffix
 
   tags = var.tags
 }
@@ -8,11 +9,11 @@ resource "aws_s3_bucket_website_configuration" "s3_bucket" {
   bucket = aws_s3_bucket.s3_bucket.id
 
   index_document {
-    suffix = "index.html"
+    suffix = var.index_document_suffix
   }
 
   error_document {
-    key = "error.html"
+    key = var.error_document_key
   }
 }
 
