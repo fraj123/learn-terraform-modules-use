@@ -18,14 +18,13 @@ variable "tags" {
   default     = {}
 }
 
-variable "index_document_suffix" {
-  description = "Suffix for index documnent."
-  type        = string
-  default     = "index.html"
+variable "files" {
+  description = "Configuration for website files."
+  type = object({
+    terraform_managed     = bool
+    error_document_key    = optional(string, "error.html")
+    index_document_suffix = optional(string, "index.html")
+    www_path              = optional(string)
+  })
 }
 
-variable "error_document_key" {
-  description = "Key for error document."
-  type        = string
-  default     = "error.html"
-}

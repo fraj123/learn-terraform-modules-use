@@ -9,11 +9,11 @@ resource "aws_s3_bucket_website_configuration" "s3_bucket" {
   bucket = aws_s3_bucket.s3_bucket.id
 
   index_document {
-    suffix = var.index_document_suffix
+    suffix = var.files.index_document_suffix
   }
 
   error_document {
-    key = var.error_document_key
+    key = var.files.error_document_key
   }
 }
 
@@ -63,3 +63,21 @@ resource "aws_s3_bucket_policy" "s3_bucket" {
   })
 }
 
+module "template_files" {
+  source = "hashicorp/dir/template"
+  version = "1.0.2"
+
+  base_dir = var.files.www_path != null ? var.files.www_path : "${path.module}/www"
+}
+
+resource "aws_s3_object" "s3_bucket" {
+  for_each = var.files.terraform_managed ? module.template_files.files : {}
+
+  bucket = aws_s3_bucket.s3_bucket.id
+
+  key          = each.key
+  source       = each.value.source_path
+  content      = each.value.content
+  etag         = each.value.digests.md5
+  content_type = each.value.content_type
+}
